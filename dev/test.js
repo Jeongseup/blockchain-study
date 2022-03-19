@@ -21,8 +21,9 @@ const currentBlockData = [{
     }
 ]
 
-const nonce = 101;
-console.log(bitcoin.hashBlock(previouseBlockHash, currentBlockData, nonce));
+const nonce = 201202;
+console.log(bitcoin.hashBlock(previouseBlockHash, currentBlockData, nonce))
+// console.log(bitcoin.proofOfWork(previouseBlockHash, currentBlockData));
 
 // bitcoin.createNewBlock(2389, 'OIUASPDASDPO', '78s97dxasdq54');
 

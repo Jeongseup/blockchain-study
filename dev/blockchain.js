@@ -58,6 +58,19 @@ Blockchain.prototype.hashBlock = function (previouseBlockHash, currentBlockData,
     return hash;
 }
 
+Blockchain.prototype.proofOfWork = function (previouseBlockHash, currentBlockData) {
+    // nonce값과 hash는 계속 바뀌어서 let 키워드 사용
+    let nonce = 0;
+    let hash = this.hashBlock(previouseBlockHash, currentBlockData, nonce);
+
+    while (hash.substring(0, 4) !== '0000') {
+        nonce++;
+        hash = this.hashBlock(previouseBlockHash, currentBlockData, nonce);
+        // console.log(hash);
+    }
+
+    return nonce;
+}
 
 
 module.exports = Blockchain;
