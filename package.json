@@ -1,0 +1,22 @@
+{
+  "name": "learn-blockchain-programming-with-javascript",
+  "version": "1.0.0",
+  "description": "자바스크립트와 함께하는 블록체인 코딩",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jeongseup/learn-blockchain-programming-with-javascript.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jeongseup/learn-blockchain-programming-with-javascript/issues"
+  },
+  "homepage": "https://github.com/Jeongseup/learn-blockchain-programming-with-javascript#readme",
+  "dependencies": {
+    "sha256": "^0.2.0"
+  }
+}
