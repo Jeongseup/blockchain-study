@@ -1,21 +1,10 @@
-/*
-// 클래스형 구현도 가능
-class BlockchainClass {
-    consturctor() {
-        this.chain = [];
-        this.newTransactions = [];
-    }
-
-    // Here you can build out all of the methods
-}
-*/
-
 const sha256 = require('sha256');
 
 // 함수형 구현
 function Blockchain() {
     this.chain = [];
     this.pendingTransactions = [];
+    this.createNewBlock(100, '0', '0');
 }
 
 
