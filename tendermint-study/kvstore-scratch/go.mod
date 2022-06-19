@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/dgraph-io/badger/v3 v3.2103.2
-	github.com/tendermint/tendermint v0.35.0
+	github.com/tendermint/tendermint v0.35.6
 )
 
 require (
