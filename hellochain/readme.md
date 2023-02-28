@@ -1,3 +1,3 @@
 # hellochain
 
-https://github.com/alessio/sdk-tutorials
+https://github.com/alessio/sdk-tutorials/hellochain

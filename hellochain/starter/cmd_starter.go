@@ -36,7 +36,7 @@ func NewCLICommand() *cobra.Command {
 	config.Seal()
 
 	rootCmd := &cobra.Command{
-		Use:   "hccli",
+		Use:   "hellocli",
 		Short: "hellochain Client",
 	}
 
