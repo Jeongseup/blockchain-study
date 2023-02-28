@@ -11,3 +11,7 @@ SHA256 해시 함수 이해
 
 ## Content.2
 mastering-bitcoin
+
+
+#### 22.06.30
+레거시 코스모스 튜토리얼 [sdk-application-tutorial](https://github.com/lbc-team/sdk-application-tutorial)
