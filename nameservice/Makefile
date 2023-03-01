@@ -3,31 +3,35 @@ PACKAGES=$(shell go list ./... | grep -v '/simulation')
 VERSION := $(shell echo $(shell git describe --tags) | sed 's/^v//')
 COMMIT := $(shell git log -1 --format='%H')
 
-# TODO: Update the ldflags with the app, client & server names
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=NewApp \
-	-X github.com/cosmos/cosmos-sdk/version.ServerName=appd \
-	-X github.com/cosmos/cosmos-sdk/version.ClientName=appcli \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=NameService \
+	-X github.com/cosmos/cosmos-sdk/version.ServerName=named \
+	-X github.com/cosmos/cosmos-sdk/version.ClientName=namecli \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
-	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) 
+	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT)
 
 BUILD_FLAGS := -ldflags '$(ldflags)'
 
-all: install
+all: nsd nscli
+
+named:
+		go build -mod=readonly $(BUILD_FLAGS) ./cmd/named/
+
+namecli:
+		go build -mod=readonly $(BUILD_FLAGS) ./cmd/namecli/
 
 install: go.sum
-		go install -mod=readonly $(BUILD_FLAGS) ./cmd/appd
-		go install -mod=readonly $(BUILD_FLAGS) ./cmd/appcli
+		@echo "--> Installing nsd & nscli"
+		go install -mod=readonly $(BUILD_FLAGS) ./cmd/named
+		go install -mod=readonly $(BUILD_FLAGS) ./cmd/namecli
 
 go.sum: go.mod
 		@echo "--> Ensure dependencies have not been modified"
 		GO111MODULE=on go mod verify
 
-# Uncomment when you have some tests
-# test:
-# 	@go test -mod=readonly $(PACKAGES)
+test:
+	@go test -mod=readonly $(PACKAGES)
 
-# look into .golangci.yml for enabling / disabling linters
-lint:
-	@echo "--> Running linter"
-	@golangci-lint run
-	@go mod verify
+clean:
+	rm -f named namecli
+
+.PHONY: clean

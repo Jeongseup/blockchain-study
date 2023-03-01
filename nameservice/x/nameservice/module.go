@@ -8,19 +8,21 @@ import (
 
 	abci "github.com/tendermint/tendermint/abci/types"
 
+	"github.com/Jeongseup/blockchain-study/nameservice/x/nameservice/client/cli"
+	"github.com/Jeongseup/blockchain-study/nameservice/x/nameservice/client/rest"
+	"github.com/Jeongseup/blockchain-study/nameservice/x/nameservice/keeper"
+	"github.com/Jeongseup/blockchain-study/nameservice/x/nameservice/types"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/Jeongseup/blockchain-study/nameservice/x/nameservice/client/cli"
-	"github.com/Jeongseup/blockchain-study/nameservice/x/nameservice/client/rest"
-	"github.com/Jeongseup/blockchain-study/nameservice/x/nameservice/keeper"
+	"github.com/cosmos/cosmos-sdk/x/bank"
 )
 
 // Type check to ensure the interface is properly implemented
 var (
-	_ module.AppModule           = AppModule{}
-	_ module.AppModuleBasic      = AppModuleBasic{}
+	_ module.AppModule      = AppModule{}
+	_ module.AppModuleBasic = AppModuleBasic{}
 )
 
 // AppModuleBasic defines the basic application module used by the nameservice module.
@@ -39,27 +41,27 @@ func (AppModuleBasic) RegisterCodec(cdc *codec.Codec) {
 // DefaultGenesis returns default genesis state as raw bytes for the nameservice
 // module.
 func (AppModuleBasic) DefaultGenesis() json.RawMessage {
-	return types.ModuleCdc.MustMarshalJSON(types.DefaultGenesisState())
+	return types.ModuleCdc.MustMarshalJSON(DefaultGenesisState())
 }
 
 // ValidateGenesis performs genesis state validation for the nameservice module.
 func (AppModuleBasic) ValidateGenesis(bz json.RawMessage) error {
-	var data types.GenesisState
+	var data GenesisState
 	err := types.ModuleCdc.UnmarshalJSON(bz, &data)
 	if err != nil {
 		return err
 	}
-	return types.ValidateGenesis(data)
+	return ValidateGenesis(data)
 }
 
 // RegisterRESTRoutes registers the REST routes for the nameservice module.
 func (AppModuleBasic) RegisterRESTRoutes(ctx context.CLIContext, rtr *mux.Router) {
-	rest.RegisterRoutes(ctx, rtr)
+	rest.RegisterRoutes(ctx, rtr, StoreKey)
 }
 
 // GetTxCmd returns the root tx command for the nameservice module.
 func (AppModuleBasic) GetTxCmd(cdc *codec.Codec) *cobra.Command {
-	return cli.GetTxCmd(cdc)
+	return cli.GetTxCmd(StoreKey, cdc)
 }
 
 // GetQueryCmd returns no root query command for the nameservice module.
@@ -73,16 +75,17 @@ func (AppModuleBasic) GetQueryCmd(cdc *codec.Codec) *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        keeper.Keeper
+	keeper     keeper.Keeper
+	bankKeeper bank.Keeper
 	// TODO: Add keepers that your application depends on
 }
 
-// NewAppModule creates a new AppModule object
-func NewAppModule(k keeper.Keeper, /*TODO: Add Keepers that your application depends on*/) AppModule {
+// NewAppModule creates a new AppModule Object
+func NewAppModule(k Keeper, bankKeeper bank.Keeper) AppModule {
 	return AppModule{
-		AppModuleBasic:      AppModuleBasic{},
-		keeper:              k,
-		// TODO: Add keepers that your application depends on
+		AppModuleBasic: AppModuleBasic{},
+		keeper:         k,
+		bankKeeper:     bankKeeper,
 	}
 }
 
@@ -111,7 +114,7 @@ func (AppModule) QuerierRoute() string {
 
 // NewQuerierHandler returns the nameservice module sdk.Querier.
 func (am AppModule) NewQuerierHandler() sdk.Querier {
-	return types.NewQuerier(am.keeper)
+	return NewQuerier(am.keeper)
 }
 
 // InitGenesis performs genesis initialization for the nameservice module. It returns
