@@ -1,4 +1,9 @@
 .DS_Store
+.idea/
+.vscode/
 
 node_modules/
-.idea/
+vue/node_modules
+vue/dist
+release/
+
