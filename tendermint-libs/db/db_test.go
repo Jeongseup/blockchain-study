@@ -12,7 +12,10 @@ func TestDBIteratorSingleKey(t *testing.T) {
 		t.Run(fmt.Sprintf("Backend %s", backend), func(t *testing.T) {
 			db := newTempDB(t, backend)
 			db.SetSync(bz("1"), bz("value_1"))
+			// fmt.Println(db)
+
 			itr := db.Iterator(nil, nil)
+			// fmt.Println(itr)
 
 			checkValid(t, itr, true)
 			checkNext(t, itr, false)
@@ -29,8 +32,13 @@ func TestDBIteratorTwoKeys(t *testing.T) {
 	for backend := range backends {
 		t.Run(fmt.Sprintf("Backend %s", backend), func(t *testing.T) {
 			db := newTempDB(t, backend)
+			fmt.Println(db)
+
 			db.SetSync(bz("1"), bz("value_1"))
+			fmt.Println(db)
+
 			db.SetSync(bz("2"), bz("value_1"))
+			fmt.Println(db)
 
 			{ // Fail by calling Next too much
 				itr := db.Iterator(nil, nil)
@@ -113,11 +121,14 @@ func TestDBBatchWrite1(t *testing.T) {
 	mdb := newMockDB()
 	ddb := NewDebugDB(t.Name(), mdb)
 	batch := ddb.NewBatch()
+	fmt.Println(batch)
 
 	batch.Set(bz("1"), bz("1"))
 	batch.Set(bz("2"), bz("2"))
 	batch.Delete(bz("3"))
+
 	batch.Set(bz("4"), bz("4"))
+
 	batch.Write()
 
 	assert.Equal(t, 0, mdb.calls["Set"])
