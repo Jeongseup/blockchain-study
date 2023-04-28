@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"gm/x/gm/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -19,5 +20,5 @@ func (k Keeper) Gm(goCtx context.Context, req *types.QueryGmRequest) (*types.Que
 	// TODO: Process the query
 	_ = ctx
 
-	return &types.QueryGmResponse{}, nil
+	return &types.QueryGmResponse{Text: "Gm World!"}, nil
 }
